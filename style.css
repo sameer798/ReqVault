@@ -221,14 +221,23 @@ textarea {
 }
 
 /* Status Badges */
+/* Status Badge Styling & Center Alignment */
 select.status-badge {
     font-weight: 600;
     font-size: 0.75rem;
     border-radius: 20px;
     padding: 0.4rem 0.7rem;
     cursor: pointer;
+    text-align: center;
+    text-align-last: center; /* Dropdown value ko center align karta hai */
 }
 
+/* Dropdown options inside select box */
+select.status-badge option {
+    text-align: center;
+    background: var(--bg-main);
+    color: var(--text-primary);
+}
 select.status-pending { background: rgba(245, 158, 11, 0.2); color: var(--status-pending); border-color: rgba(245, 158, 11, 0.3); }
 select.status-progress { background: rgba(59, 130, 246, 0.2); color: var(--status-progress); border-color: rgba(59, 130, 246, 0.3); }
 select.status-testing { background: rgba(168, 85, 247, 0.2); color: var(--status-testing); border-color: rgba(168, 85, 247, 0.3); }
