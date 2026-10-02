@@ -1,0 +1,423 @@
+/* Custom CSS Variables & Dark Glassmorphism Theme */
+:root {
+    --bg-main: #0b0f19;
+    --card-bg: rgba(18, 26, 43, 0.7);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --accent-purple: #8b5cf6;
+    --accent-blue: #3b82f6;
+    --accent-cyan: #06b6d4;
+    --text-primary: #f3f4f6;
+    --text-secondary: #9ca3af;
+    --text-muted: #6b7280;
+    
+    /* Status Colors */
+    --status-pending: #f59e0b;
+    --status-progress: #3b82f6;
+    --status-testing: #a855f7;
+    --status-completed: #10b981;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-main);
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.15) 0px, transparent 50%);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.app-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Header Styling */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo-icon {
+    font-size: 2rem;
+    color: var(--accent-cyan);
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.app-header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.75rem;
+}
+
+/* Buttons */
+.btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-danger {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.btn-danger:hover {
+    background: rgba(239, 68, 68, 0.25);
+}
+
+.btn-cancel {
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.btn-icon {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.4rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: color 0.2s;
+}
+
+.btn-icon:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Table Card Styling */
+.table-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    padding: 0.5rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th, td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: top;
+}
+
+th {
+    background: rgba(255, 255, 255, 0.02);
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ID Badge Style */
+.id-badge {
+    font-family: 'Fira Code', monospace;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    background: rgba(6, 182, 212, 0.1);
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    border: 1px solid rgba(6, 182, 212, 0.2);
+    display: inline-block;
+    font-size: 0.85rem;
+}
+
+/* Form Controls in Table */
+input[type="text"], textarea, select {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    padding: 0.6rem 0.8rem;
+    font-family: inherit;
+    font-size: 0.875rem;
+    outline: none;
+    transition: all 0.2s;
+}
+
+input[type="text"]:focus, textarea:focus, select:focus {
+    border-color: var(--accent-blue);
+    background: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+}
+
+textarea {
+    font-family: 'Fira Code', monospace;
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.5;
+}
+
+/* Status Badges */
+select.status-badge {
+    font-weight: 600;
+    font-size: 0.75rem;
+    border-radius: 20px;
+    padding: 0.4rem 0.7rem;
+    cursor: pointer;
+}
+
+select.status-pending { background: rgba(245, 158, 11, 0.2); color: var(--status-pending); border-color: rgba(245, 158, 11, 0.3); }
+select.status-progress { background: rgba(59, 130, 246, 0.2); color: var(--status-progress); border-color: rgba(59, 130, 246, 0.3); }
+select.status-testing { background: rgba(168, 85, 247, 0.2); color: var(--status-testing); border-color: rgba(168, 85, 247, 0.3); }
+select.status-completed { background: rgba(16, 185, 129, 0.2); color: var(--status-completed); border-color: rgba(16, 185, 129, 0.3); }
+
+/* Modal Styling */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-overlay.hidden {
+    display: none;
+}
+
+.modal-card {
+    background: #121a2b;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    width: 90%;
+    max-width: 480px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.warning-icon {
+    font-size: 1.5rem;
+    color: var(--status-pending);
+}
+
+.modal-body {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+}
+
+.modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+/* PDF Export High-Contrast Light Theme Overrides */
+.pdf-export-mode {
+    background: #ffffff !important;
+    color: #111827 !important;
+    padding: 10px !important;
+}
+
+.pdf-export-mode table {
+    border: 1px solid #e5e7eb !important;
+}
+
+.pdf-export-mode th {
+    background: #f3f4f6 !important;
+    color: #111827 !important;
+    border-bottom: 2px solid #d1d5db !important;
+    font-weight: 700 !important;
+}
+
+.pdf-export-mode td {
+    border-bottom: 1px solid #e5e7eb !important;
+    color: #111827 !important;
+}
+
+.pdf-export-mode input,
+.pdf-export-mode textarea {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border: 1px solid #d1d5db !important;
+    box-shadow: none !important;
+}
+
+.pdf-export-mode select.status-badge {
+    background: #f3f4f6 !important;
+    color: #111827 !important;
+    border: 1px solid #9ca3af !important;
+}
+
+.pdf-export-mode .id-badge {
+    background: #e0f2fe !important;
+    color: #0369a1 !important;
+    border-color: #bae6fd !important;
+}
+
+
+/* Editable ID Input Styling */
+input.id-input {
+    font-family: 'Fira Code', monospace;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    background: rgba(6, 182, 212, 0.1);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    text-align: center;
+    padding: 0.5rem 0.4rem;
+    border-radius: 6px;
+}
+
+input.id-input:focus {
+    background: rgba(6, 182, 212, 0.2);
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.25);
+}
+
+
+/* Editable ID Input Styling */
+input.id-input {
+    font-family: 'Fira Code', monospace;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    background: rgba(6, 182, 212, 0.1);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    text-align: center;
+    padding: 0.5rem 0.4rem;
+    border-radius: 6px;
+}
+
+input.id-input:focus {
+    background: rgba(6, 182, 212, 0.2);
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.25);
+}
+
+/* Empty State UI Styling */
+.empty-state {
+    text-align: center;
+    padding: 3.5rem 1rem !important;
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.empty-icon {
+    font-size: 2.5rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+}
+
+.empty-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.4rem;
+}
+
+.empty-subtext {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.empty-subtext strong {
+    color: var(--accent-cyan);
+}
+
+
+/* Date & Time Stamp Sub-text Styling */
+.time-stamp {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    letter-spacing: 0.02em;
+}
+
+.time-stamp i {
+    font-size: 0.7rem;
+    color: var(--accent-cyan);
+}
+
+.time-stamp span {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.status-time i {
+    color: var(--status-pending);
+}

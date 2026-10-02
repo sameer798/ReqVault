@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevTask - Requirement Tracker</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- html2pdf Library for PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header Section -->
+        <header class="app-header">
+            <div class="logo-section">
+                <i class="fa-solid fa-code-branch logo-icon"></i>
+                <div>
+                    <h1>DevRequirement Tracker</h1>
+                    <p class="subtitle">Manage project requirements & clean old tasks</p>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button id="add-row-btn" class="btn btn-primary">
+                    <i class="fa-solid fa-plus"></i> Add New Row
+                </button>
+                <button id="export-clear-btn" class="btn btn-secondary">
+                    <i class="fa-solid fa-file-pdf"></i> Export PDF & Clear
+                </button>
+                <button id="check-old-btn" class="btn btn-danger">
+                    <i class="fa-solid fa-broom"></i> Clear Old Data (1 Wk+)
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content / Table Container -->
+        <main class="table-card">
+            <div class="table-wrapper" id="pdf-content">
+                <table id="requirements-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 90px;">ID</th>
+                            <th style="width: 270px;">Page / Type</th>
+                            <th>Requirement Notes / Code Snippet</th>
+                            <th style="width: 150px;">Status</th>
+                            <th style="width: 80px;" class="no-print">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- Dynamic rows will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <i class="fa-solid fa-triangle-exclamation warning-icon"></i>
+                <h2>Old Data Cleanup Alert</h2>
+            </div>
+            <div class="modal-body">
+                <p>System detected entries older than <strong>7 days</strong>. What would you like to do with these items?</p>
+            </div>
+            <div class="modal-actions">
+                <button id="modal-export-clear-btn" class="btn btn-primary">
+                    <i class="fa-solid fa-download"></i> Export PDF & Clear
+                </button>
+                <button id="modal-just-clear-btn" class="btn btn-danger">
+                    <i class="fa-solid fa-trash"></i> Just Clear (7 Days+)
+                </button>
+                <button id="modal-cancel-btn" class="btn btn-cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
