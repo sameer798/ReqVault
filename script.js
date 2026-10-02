@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderTable() {
         tableBody.innerHTML = "";
 
+        // Empty state check
         if (tasks.length === 0) {
             tableBody.innerHTML = `
                 <tr>
@@ -61,13 +62,13 @@ document.addEventListener("DOMContentLoaded", () => {
         tasks.forEach((task, index) => {
             const tr = document.createElement("tr");
 
-            // Format Creation & Status Update Timestamps
             const createdFormatted = formatDateTime(task.createdAt);
             const statusFormatted = formatDateTime(task.statusUpdatedAt || task.createdAt);
 
             tr.innerHTML = `
                 <td>
                     <input type="text" class="id-input" value="${escapeHtml(task.id)}" data-index="${index}" data-field="id" placeholder="ID">
+                    <button class="btn-icon delete-btn mobile-only-del" data-index="${index}" title="Delete Row"><i class="fa-solid fa-trash"></i></button>
                 </td>
                 <td>
                     <input type="text" value="${escapeHtml(task.pageType)}" data-index="${index}" data-field="pageType" placeholder="e.g. Auth / UI / Backend">
@@ -89,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <i class="fa-solid fa-rotate-left"></i> ${escapeHtml(task.status || 'Pending')} at: <span>${statusFormatted}</span>
                     </div>
                 </td>
-                <td class="no-print">
+                <td class="no-print desktop-only-del">
                     <button class="btn-icon delete-btn" data-index="${index}" title="Delete Row"><i class="fa-solid fa-trash"></i></button>
                 </td>
             `;
@@ -115,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         tasks[index].statusUpdatedAt = now;
                         e.target.className = `status-badge status-${e.target.value.toLowerCase().replace(/\s+/g, "")}`;
                         
-                        // Instantly update timestamp label below status
+                        // Instantly update status timestamp label below select dropdown
                         const statusTimeElem = e.target.parentElement.querySelector('.status-time');
                         if (statusTimeElem) {
                             statusTimeElem.innerHTML = `<i class="fa-solid fa-rotate-left"></i> ${escapeHtml(e.target.value)} at: <span>${formatDateTime(now)}</span>`;

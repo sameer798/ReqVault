@@ -3,30 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevTask - Requirement Tracker</title>
-    <!-- Google Fonts -->
+    <title>ReqShift - DevRequirement Tracker</title>
+    <!-- Google Fonts & Font Awesome Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Main CSS -->
+    
+    <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="style.css">
-    <!-- html2pdf Library for PDF Export -->
+
+    <!-- html2pdf.js for High Contrast PDF Export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
+
     <div class="app-container">
         <!-- Header Section -->
         <header class="app-header">
-            <div class="logo-section">
-                <i class="fa-solid fa-code-branch logo-icon"></i>
+            <div class="brand">
+                <i class="fa-solid fa-code-branch brand-icon"></i>
                 <div>
-                    <h1>DevRequirement Tracker</h1>
+                    <h1>ReqShift</h1>
                     <p class="subtitle">Manage project requirements & clean old tasks</p>
                 </div>
             </div>
-            <div class="action-buttons">
+            <div class="header-actions">
                 <button id="add-row-btn" class="btn btn-primary">
                     <i class="fa-solid fa-plus"></i> Add New Row
                 </button>
@@ -39,50 +41,48 @@
             </div>
         </header>
 
-        <!-- Main Content / Table Container -->
-        <main class="table-card">
-            <div class="table-wrapper" id="pdf-content">
-                <table id="requirements-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 90px;">ID</th>
-                            <th style="width: 270px;">Page / Type</th>
-                            <th>Requirement Notes / Code Snippet</th>
-                            <th style="width: 220px;">Status</th>
-                            <th style="width: 80px;" class="no-print">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body">
-                        <!-- Dynamic rows will be inserted here -->
-                    </tbody>
-                </table>
-            </div>
-        </main>
+        <!-- Requirements Table Wrapper -->
+        <div id="pdf-content" class="table-container">
+            <table id="requirements-table">
+                <thead>
+                    <tr>
+                        <th style="width: 90px;">ID</th>
+                        <th style="width: 270px;">PAGE / TYPE</th>
+                        <th>REQUIREMENT NOTES / CODE SNIPPET</th>
+                        <th style="width: 200px;">STATUS</th>
+                        <th style="width: 70px;" class="no-print">ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <!-- Dynamic Rows / Empty State render via JS -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <!-- Confirmation Modal -->
+    <!-- 7-Day Data Confirmation Modal -->
     <div id="modal-overlay" class="modal-overlay hidden">
         <div class="modal-card">
             <div class="modal-header">
                 <i class="fa-solid fa-triangle-exclamation warning-icon"></i>
-                <h2>Old Data Cleanup Alert</h2>
+                <h3>Old Data Cleanup Warning</h3>
             </div>
-            <div class="modal-body">
-                <p>System detected entries older than <strong>7 days</strong>. What would you like to do with these items?</p>
-            </div>
+            <p class="modal-body">
+                Requirements older than 7 days were detected in local storage. Would you like to export them to PDF before clearing?
+            </p>
             <div class="modal-actions">
                 <button id="modal-export-clear-btn" class="btn btn-primary">
-                    <i class="fa-solid fa-download"></i> Export PDF & Clear
+                    <i class="fa-solid fa-file-pdf"></i> Export PDF & Clear
                 </button>
                 <button id="modal-just-clear-btn" class="btn btn-danger">
-                    <i class="fa-solid fa-trash"></i> Just Clear (7 Days+)
+                    <i class="fa-solid fa-trash-can"></i> Just Clear
                 </button>
-                <button id="modal-cancel-btn" class="btn btn-cancel">Cancel</button>
+                <button id="modal-cancel-btn" class="btn btn-secondary">Cancel</button>
             </div>
         </div>
     </div>
 
-    <!-- Main JavaScript -->
+    <!-- Application Script -->
     <script src="script.js"></script>
 </body>
 </html>

@@ -1,101 +1,105 @@
-/* Custom CSS Variables & Dark Glassmorphism Theme */
+/* ==========================================
+   GLOBAL VARIABLES & RESET
+   ========================================== */
 :root {
-    --bg-main: #0b0f19;
-    --card-bg: rgba(18, 26, 43, 0.7);
-    --border-color: rgba(255, 255, 255, 0.1);
-    --accent-purple: #8b5cf6;
-    --accent-blue: #3b82f6;
-    --accent-cyan: #06b6d4;
-    --text-primary: #f3f4f6;
-    --text-secondary: #9ca3af;
-    --text-muted: #6b7280;
+    --bg-main: #0B0F19;
+    --bg-card: rgba(17, 24, 39, 0.75);
+    --border-color: rgba(255, 255, 255, 0.08);
+    --border-focus: #06B6D4;
     
-    /* Status Colors */
-    --status-pending: #f59e0b;
-    --status-progress: #3b82f6;
-    --status-testing: #a855f7;
-    --status-completed: #10b981;
+    --text-primary: #F3F4F6;
+    --text-secondary: #9CA3AF;
+    --text-muted: #6B7280;
+    
+    --accent-cyan: #06B6D4;
+    --accent-purple: #8B5CF6;
+    
+    --status-pending: #F59E0B;
+    --status-progress: #3B82F6;
+    --status-testing: #A855F7;
+    --status-completed: #10B981;
 }
 
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    background-color: var(--bg-main);
-    background-image: 
-        radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.15) 0px, transparent 50%);
-    color: var(--text-primary);
     font-family: 'Inter', sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
     min-height: 100vh;
-    padding: 2rem;
+    padding: 2rem 1rem;
+    line-height: 1.5;
 }
 
+/* ==========================================
+   LAYOUT & CONTAINER
+   ========================================== */
 .app-container {
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
-/* Header Styling */
 .app-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.logo-section {
-    display: flex;
-    align-items: center;
+    flex-wrap: wrap;
     gap: 1rem;
 }
 
-.logo-icon {
-    font-size: 2rem;
-    color: var(--accent-cyan);
-    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
 }
 
-.app-header h1 {
-    font-size: 1.5rem;
+.brand-icon {
+    font-size: 1.8rem;
+    color: var(--accent-cyan);
+}
+
+.brand h1 {
+    font-size: 1.6rem;
     font-weight: 700;
+    letter-spacing: -0.02em;
 }
 
 .subtitle {
+    font-size: 0.85rem;
     color: var(--text-secondary);
-    font-size: 0.875rem;
 }
 
-.action-buttons {
+.header-actions {
     display: flex;
     gap: 0.75rem;
+    flex-wrap: wrap;
 }
 
-/* Buttons */
+/* ==========================================
+   BUTTONS STYLING
+   ========================================== */
 .btn {
-    padding: 0.6rem 1.2rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.1rem;
     border-radius: 8px;
-    font-size: 0.875rem;
+    font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
     border: 1px solid transparent;
     transition: all 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
-    color: #fff;
-    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+    color: #FFF;
+    box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);
 }
 
 .btn-primary:hover {
@@ -105,8 +109,8 @@ body {
 
 .btn-secondary {
     background: rgba(255, 255, 255, 0.05);
+    border-color: var(--border-color);
     color: var(--text-primary);
-    border: 1px solid var(--border-color);
 }
 
 .btn-secondary:hover {
@@ -114,50 +118,40 @@ body {
 }
 
 .btn-danger {
-    background: rgba(239, 68, 68, 0.15);
-    color: #f87171;
-    border: 1px solid rgba(239, 68, 68, 0.3);
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #EF4444;
 }
 
 .btn-danger:hover {
-    background: rgba(239, 68, 68, 0.25);
-}
-
-.btn-cancel {
-    background: transparent;
-    color: var(--text-secondary);
+    background: rgba(239, 68, 68, 0.2);
 }
 
 .btn-icon {
     background: transparent;
     border: none;
-    color: var(--text-secondary);
+    color: var(--text-muted);
     cursor: pointer;
     padding: 0.4rem;
-    border-radius: 4px;
-    font-size: 1rem;
-    transition: color 0.2s;
+    border-radius: 6px;
+    transition: all 0.2s;
 }
 
 .btn-icon:hover {
-    color: var(--text-primary);
-    background: rgba(255, 255, 255, 0.1);
+    color: #EF4444;
+    background: rgba(239, 68, 68, 0.1);
 }
 
-/* Table Card Styling */
-.table-card {
-    background: var(--card-bg);
+/* ==========================================
+   TABLE STYLING
+   ========================================== */
+.table-container {
+    background: var(--bg-card);
     backdrop-filter: blur(12px);
     border: 1px solid var(--border-color);
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-.table-wrapper {
-    width: 100%;
-    overflow-x: auto;
-    padding: 0.5rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
 }
 
 table {
@@ -166,62 +160,71 @@ table {
     text-align: left;
 }
 
-th, td {
+th {
+    background: rgba(0, 0, 0, 0.3);
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+td {
     padding: 1rem;
     border-bottom: 1px solid var(--border-color);
     vertical-align: top;
 }
 
-th {
-    background: rgba(255, 255, 255, 0.02);
-    color: var(--text-secondary);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+tr:last-child td {
+    border-bottom: none;
 }
 
-/* ID Badge Style */
-.id-badge {
+/* ==========================================
+   FORM INPUTS & TEXTAREA
+   ========================================== */
+input[type="text"], textarea, select {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    padding: 0.5rem 0.75rem;
+    font-family: inherit;
+    font-size: 0.875rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input[type="text"]:focus, textarea:focus, select:focus {
+    border-color: var(--border-focus);
+    background: rgba(0, 0, 0, 0.35);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+/* Editable ID Input */
+input.id-input {
     font-family: 'Fira Code', monospace;
     font-weight: 700;
     color: var(--accent-cyan);
     background: rgba(6, 182, 212, 0.1);
-    padding: 0.4rem 0.6rem;
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    text-align: center;
+    padding: 0.5rem 0.4rem;
     border-radius: 6px;
-    border: 1px solid rgba(6, 182, 212, 0.2);
-    display: inline-block;
-    font-size: 0.85rem;
 }
 
-/* Form Controls in Table */
-input[type="text"], textarea, select {
-    width: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    color: var(--text-primary);
-    padding: 0.6rem 0.8rem;
-    font-family: inherit;
-    font-size: 0.875rem;
-    outline: none;
-    transition: all 0.2s;
+input.id-input:focus {
+    background: rgba(6, 182, 212, 0.2);
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.25);
 }
 
-input[type="text"]:focus, textarea:focus, select:focus {
-    border-color: var(--accent-blue);
-    background: rgba(0, 0, 0, 0.5);
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
-}
-
-textarea {
-    font-family: 'Fira Code', monospace;
-    resize: vertical;
-    min-height: 80px;
-    line-height: 1.5;
-}
-
-/* Status Badges */
-/* Status Badge Styling & Center Alignment */
+/* Status Badges & Center Alignment */
 select.status-badge {
     font-weight: 600;
     font-size: 0.75rem;
@@ -229,154 +232,43 @@ select.status-badge {
     padding: 0.4rem 0.7rem;
     cursor: pointer;
     text-align: center;
-    text-align-last: center; /* Dropdown value ko center align karta hai */
+    text-align-last: center;
 }
 
-/* Dropdown options inside select box */
 select.status-badge option {
     text-align: center;
     background: var(--bg-main);
     color: var(--text-primary);
 }
-select.status-pending { background: rgba(245, 158, 11, 0.2); color: var(--status-pending); border-color: rgba(245, 158, 11, 0.3); }
-select.status-progress { background: rgba(59, 130, 246, 0.2); color: var(--status-progress); border-color: rgba(59, 130, 246, 0.3); }
-select.status-testing { background: rgba(168, 85, 247, 0.2); color: var(--status-testing); border-color: rgba(168, 85, 247, 0.3); }
-select.status-completed { background: rgba(16, 185, 129, 0.2); color: var(--status-completed); border-color: rgba(16, 185, 129, 0.3); }
 
-/* Modal Styling */
-.modal-overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(5px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
+.status-pending { background: rgba(245, 158, 11, 0.15); color: var(--status-pending); border: 1px solid rgba(245, 158, 11, 0.3); }
+.status-inprogress { background: rgba(59, 130, 246, 0.15); color: var(--status-progress); border: 1px solid rgba(59, 130, 246, 0.3); }
+.status-testing { background: rgba(168, 85, 247, 0.15); color: var(--status-testing); border: 1px solid rgba(168, 85, 247, 0.3); }
+.status-completed { background: rgba(16, 185, 129, 0.15); color: var(--status-completed); border: 1px solid rgba(16, 185, 129, 0.3); }
 
-.modal-overlay.hidden {
-    display: none;
-}
-
-.modal-card {
-    background: #121a2b;
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 1.5rem;
-    width: 90%;
-    max-width: 480px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-}
-
-.modal-header {
+/* Timestamp Sub-text Styling (Single Line) */
+.time-stamp {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 0.4rem;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
+    gap: 0.35rem;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
 }
 
-.warning-icon {
-    font-size: 1.5rem;
-    color: var(--status-pending);
+.time-stamp i {
+    font-size: 0.7rem;
+    color: var(--accent-cyan);
 }
 
-.modal-body {
+.time-stamp span {
     color: var(--text-secondary);
-    font-size: 0.95rem;
-    line-height: 1.5;
-    margin-bottom: 1.5rem;
+    font-weight: 500;
 }
 
-.modal-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    justify-content: flex-end;
-}
-
-/* PDF Export High-Contrast Light Theme Overrides */
-.pdf-export-mode {
-    background: #ffffff !important;
-    color: #111827 !important;
-    padding: 10px !important;
-}
-
-.pdf-export-mode table {
-    border: 1px solid #e5e7eb !important;
-}
-
-.pdf-export-mode th {
-    background: #f3f4f6 !important;
-    color: #111827 !important;
-    border-bottom: 2px solid #d1d5db !important;
-    font-weight: 700 !important;
-}
-
-.pdf-export-mode td {
-    border-bottom: 1px solid #e5e7eb !important;
-    color: #111827 !important;
-}
-
-.pdf-export-mode input,
-.pdf-export-mode textarea {
-    background: #ffffff !important;
-    color: #111827 !important;
-    border: 1px solid #d1d5db !important;
-    box-shadow: none !important;
-}
-
-.pdf-export-mode select.status-badge {
-    background: #f3f4f6 !important;
-    color: #111827 !important;
-    border: 1px solid #9ca3af !important;
-}
-
-.pdf-export-mode .id-badge {
-    background: #e0f2fe !important;
-    color: #0369a1 !important;
-    border-color: #bae6fd !important;
-}
-
-
-/* Editable ID Input Styling */
-input.id-input {
-    font-family: 'Fira Code', monospace;
-    font-weight: 700;
-    color: var(--accent-cyan);
-    background: rgba(6, 182, 212, 0.1);
-    border: 1px solid rgba(6, 182, 212, 0.3);
-    text-align: center;
-    padding: 0.5rem 0.4rem;
-    border-radius: 6px;
-}
-
-input.id-input:focus {
-    background: rgba(6, 182, 212, 0.2);
-    border-color: var(--accent-cyan);
-    box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.25);
-}
-
-
-/* Editable ID Input Styling */
-input.id-input {
-    font-family: 'Fira Code', monospace;
-    font-weight: 700;
-    color: var(--accent-cyan);
-    background: rgba(6, 182, 212, 0.1);
-    border: 1px solid rgba(6, 182, 212, 0.3);
-    text-align: center;
-    padding: 0.5rem 0.4rem;
-    border-radius: 6px;
-}
-
-input.id-input:focus {
-    background: rgba(6, 182, 212, 0.2);
-    border-color: var(--accent-cyan);
-    box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.25);
-}
-
-/* Empty State UI Styling */
+/* Empty State Styling */
 .empty-state {
     text-align: center;
     padding: 3.5rem 1rem !important;
@@ -405,28 +297,104 @@ input.id-input:focus {
     color: var(--accent-cyan);
 }
 
+/* ==========================================
+   MODAL DIALOG
+   ========================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
 
-/* Date & Time Stamp Sub-text Styling */
-.time-stamp {
-    font-size: 0.72rem;
-    color: var(--text-muted);
-    margin-top: 0.4rem;
+.hidden { display: none !important; }
+
+.modal-card {
+    background: #111827;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    max-width: 480px;
+    width: 90%;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+}
+
+.modal-header {
     display: flex;
     align-items: center;
-    gap: 0.35rem;
-    letter-spacing: 0.02em;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
 }
 
-.time-stamp i {
-    font-size: 0.7rem;
-    color: var(--accent-cyan);
+.warning-icon { color: #F59E0B; font-size: 1.5rem; }
+.modal-body { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem; }
+.modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; flex-wrap: wrap; }
+
+.mobile-only-del { display: none; }
+
+/* ==========================================
+   RESPONSIVE DESIGN (MOBILE & TABLET)
+   ========================================== */
+@media screen and (max-width: 1024px) {
+    .app-header { flex-direction: column; align-items: flex-start; }
+    .header-actions { width: 100%; }
+    .btn { flex: 1; justify-content: center; }
 }
 
-.time-stamp span {
-    color: var(--text-secondary);
-    font-weight: 500;
+@media screen and (max-width: 768px) {
+    .table-container { border: none; background: transparent; box-shadow: none; }
+    table, thead, tbody, th, td, tr { display: block; }
+    thead { display: none; }
+
+    tbody tr {
+        background: #111827;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 14px;
+        padding: 1.2rem;
+        margin-bottom: 1.25rem;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    }
+
+    tbody td {
+        padding: 0.5rem 0 !important;
+        border: none !important;
+        width: 100% !important;
+    }
+
+    tbody tr td:first-child {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 0.75rem !important;
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.1) !important;
+        margin-bottom: 0.75rem;
+    }
+
+    input.id-input { width: 100px !important; }
+    .desktop-only-del { display: none !important; }
+    .mobile-only-del { display: inline-block !important; }
+
+    select.status-badge { width: 100% !important; padding: 0.6rem 1rem; }
+    .time-stamp { white-space: normal; flex-wrap: wrap; }
 }
 
-.status-time i {
-    color: var(--status-pending);
+/* PDF Export High-Contrast Overrides */
+.pdf-export-mode {
+    background: #FFFFFF !important;
+    color: #000000 !important;
 }
+.pdf-export-mode th { background: #F3F4F6 !important; color: #111827 !important; }
+.pdf-export-mode td { border-bottom: 1px solid #E5E7EB !important; }
+.pdf-export-mode input, .pdf-export-mode textarea, .pdf-export-mode select {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border: 1px solid #D1D5DB !important;
+}
+.pdf-export-mode .no-print { display: none !important; }
