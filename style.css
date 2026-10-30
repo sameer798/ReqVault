@@ -6,14 +6,14 @@
     --bg-card: rgba(17, 24, 39, 0.75);
     --border-color: rgba(255, 255, 255, 0.08);
     --border-focus: #06B6D4;
-    
+
     --text-primary: #F3F4F6;
     --text-secondary: #9CA3AF;
     --text-muted: #6B7280;
-    
+
     --accent-cyan: #06B6D4;
     --accent-purple: #8B5CF6;
-    
+
     --status-pending: #F59E0B;
     --status-progress: #3B82F6;
     --status-testing: #A855F7;
@@ -183,7 +183,9 @@ tr:last-child td {
 /* ==========================================
    FORM INPUTS & TEXTAREA
    ========================================== */
-input[type="text"], textarea, select {
+input[type="text"],
+textarea,
+select {
     width: 100%;
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid var(--border-color);
@@ -196,7 +198,9 @@ input[type="text"], textarea, select {
     transition: border-color 0.2s;
 }
 
-input[type="text"]:focus, textarea:focus, select:focus {
+input[type="text"]:focus,
+textarea:focus,
+select:focus {
     border-color: var(--border-focus);
     background: rgba(0, 0, 0, 0.35);
 }
@@ -241,10 +245,29 @@ select.status-badge option {
     color: var(--text-primary);
 }
 
-.status-pending { background: rgba(245, 158, 11, 0.15); color: var(--status-pending); border: 1px solid rgba(245, 158, 11, 0.3); }
-.status-inprogress { background: rgba(59, 130, 246, 0.15); color: var(--status-progress); border: 1px solid rgba(59, 130, 246, 0.3); }
-.status-testing { background: rgba(168, 85, 247, 0.15); color: var(--status-testing); border: 1px solid rgba(168, 85, 247, 0.3); }
-.status-completed { background: rgba(16, 185, 129, 0.15); color: var(--status-completed); border: 1px solid rgba(16, 185, 129, 0.3); }
+.status-pending {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--status-pending);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.status-inprogress {
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--status-progress);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.status-testing {
+    background: rgba(168, 85, 247, 0.15);
+    color: var(--status-testing);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+.status-completed {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--status-completed);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
 
 /* Timestamp Sub-text Styling (Single Line) */
 .time-stamp {
@@ -314,7 +337,9 @@ select.status-badge option {
     z-index: 1000;
 }
 
-.hidden { display: none !important; }
+.hidden {
+    display: none !important;
+}
 
 .modal-card {
     background: #111827;
@@ -333,25 +358,66 @@ select.status-badge option {
     margin-bottom: 1rem;
 }
 
-.warning-icon { color: #F59E0B; font-size: 1.5rem; }
-.modal-body { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem; }
-.modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; flex-wrap: wrap; }
+.warning-icon {
+    color: #F59E0B;
+    font-size: 1.5rem;
+}
 
-.mobile-only-del { display: none; }
+.modal-body {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.mobile-only-del {
+    display: none;
+}
 
 /* ==========================================
    RESPONSIVE DESIGN (MOBILE & TABLET)
    ========================================== */
 @media screen and (max-width: 1024px) {
-    .app-header { flex-direction: column; align-items: flex-start; }
-    .header-actions { width: 100%; }
-    .btn { flex: 1; justify-content: center; }
+    .app-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-actions {
+        width: 100%;
+    }
+
+    .btn {
+        flex: 1;
+        justify-content: center;
+    }
 }
 
 @media screen and (max-width: 768px) {
-    .table-container { border: none; background: transparent; box-shadow: none; }
-    table, thead, tbody, th, td, tr { display: block; }
-    thead { display: none; }
+    .table-container {
+        border: none;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+
+    thead {
+        display: none;
+    }
 
     tbody tr {
         background: #111827;
@@ -377,12 +443,50 @@ select.status-badge option {
         margin-bottom: 0.75rem;
     }
 
-    input.id-input { width: 100px !important; }
-    .desktop-only-del { display: none !important; }
-    .mobile-only-del { display: inline-block !important; }
+    input.id-input {
+        width: 100px !important;
+    }
 
-    select.status-badge { width: 100% !important; padding: 0.6rem 1rem; }
-    .time-stamp { white-space: normal; flex-wrap: wrap; }
+    .desktop-only-del {
+        display: none !important;
+    }
+
+    .mobile-only-del {
+        display: inline-block !important;
+    }
+
+    select.status-badge {
+        width: 100% !important;
+        padding: 0.6rem 1rem;
+    }
+
+    .time-stamp {
+        white-space: normal;
+        flex-wrap: wrap;
+    }
+
+
+    .header-actions {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        /* Teeno buttons ek hi line me rahenge */
+        gap: 0.35rem;
+    }
+
+    .btn {
+        flex: 1;
+        padding: 0.45rem 0.3rem;
+        font-size: 0.7rem;
+        /* Compact chota text */
+        white-space: nowrap;
+        justify-content: center;
+    }
+
+    .btn i {
+        font-size: 0.75rem;
+        /* Icon size chota */
+    }
 }
 
 /* PDF Export High-Contrast Overrides */
@@ -390,11 +494,44 @@ select.status-badge option {
     background: #FFFFFF !important;
     color: #000000 !important;
 }
-.pdf-export-mode th { background: #F3F4F6 !important; color: #111827 !important; }
-.pdf-export-mode td { border-bottom: 1px solid #E5E7EB !important; }
-.pdf-export-mode input, .pdf-export-mode textarea, .pdf-export-mode select {
+
+.pdf-export-mode th {
+    background: #F3F4F6 !important;
+    color: #111827 !important;
+}
+
+.pdf-export-mode td {
+    border-bottom: 1px solid #E5E7EB !important;
+}
+
+.pdf-export-mode input,
+.pdf-export-mode textarea,
+.pdf-export-mode select {
     background: #FFFFFF !important;
     color: #000000 !important;
     border: 1px solid #D1D5DB !important;
 }
-.pdf-export-mode .no-print { display: none !important; }
+
+.pdf-export-mode .no-print {
+    display: none !important;
+}
+
+
+
+
+/* Actions buttons group styling */
+.action-buttons-group {
+    display: flex;
+    gap: 0.3rem;
+    align-items: center;
+}
+
+.btn-icon:hover {
+    background: rgba(6, 182, 212, 0.15);
+    color: var(--accent-cyan);
+}
+
+.btn-icon.delete-btn:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: #EF4444;
+}

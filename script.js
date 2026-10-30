@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Load Tasks from LocalStorage
     let tasks = JSON.parse(localStorage.getItem("devTasks")) || [];
 
-    // Date Formatter Helper (e.g. 02 Oct, 05:05 PM)
+    // Date Formatter Helper (e.g. 05 Oct, 10:26 AM)
     function formatDateTime(timestamp) {
         if (!timestamp) return "";
         const d = new Date(timestamp);
@@ -26,24 +26,19 @@ document.addEventListener("DOMContentLoaded", () => {
         return `${day} ${month}, ${hours.toString().padStart(2, '0')}:${minutes} ${ampm}`;
     }
 
-    // Helper: Generate next sequential ID (R1, R2, R3...)
-    function getNextId() {
-        if (tasks.length === 0) return "R1";
-        let maxNum = 0;
-        tasks.forEach(task => {
-            if (task.id && task.id.startsWith("R")) {
-                const num = parseInt(task.id.replace("R", ""), 10);
-                if (!isNaN(num) && num > maxNum) {
-                    maxNum = num;
-                }
-            }
+    // Helper: Re-assign sequential IDs (R1, R2, R3...) across all tasks
+    function updateSequentialIds() {
+        tasks.forEach((task, index) => {
+            task.id = `R${index + 1}`;
         });
-        return `R${maxNum + 1}`;
     }
 
     // Render Table Rows or Empty State
     function renderTable() {
         tableBody.innerHTML = "";
+
+        // Ensure IDs are strictly sequential on render
+        updateSequentialIds();
 
         // Empty state check
         if (tasks.length === 0) {
@@ -67,8 +62,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             tr.innerHTML = `
                 <td>
-                    <input type="text" class="id-input" value="${escapeHtml(task.id)}" data-index="${index}" data-field="id" placeholder="ID">
-                    <button class="btn-icon delete-btn mobile-only-del" data-index="${index}" title="Delete Row"><i class="fa-solid fa-trash"></i></button>
+                    <input type="text" class="id-input" value="${escapeHtml(task.id)}" readonly title="Auto-generated sequential ID" style="cursor: not-allowed;">
+                    <div class="mobile-actions mobile-only-del">
+                        <button class="btn-icon copy-btn" data-index="${index}" title="Duplicate Row"><i class="fa-solid fa-copy"></i></button>
+                        <button class="btn-icon delete-btn" data-index="${index}" title="Delete Row"><i class="fa-solid fa-trash"></i></button>
+                    </div>
                 </td>
                 <td>
                     <input type="text" value="${escapeHtml(task.pageType)}" data-index="${index}" data-field="pageType" placeholder="e.g. Auth / UI / Backend">
@@ -91,7 +89,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                 </td>
                 <td class="no-print desktop-only-del">
-                    <button class="btn-icon delete-btn" data-index="${index}" title="Delete Row"><i class="fa-solid fa-trash"></i></button>
+                    <div class="action-buttons-group">
+                        <button class="btn-icon copy-btn" data-index="${index}" title="Duplicate Row"><i class="fa-solid fa-copy"></i></button>
+                        <button class="btn-icon delete-btn" data-index="${index}" title="Delete Row"><i class="fa-solid fa-trash"></i></button>
+                    </div>
                 </td>
             `;
 
@@ -101,9 +102,9 @@ document.addEventListener("DOMContentLoaded", () => {
         attachEventListeners();
     }
 
-    // Attach Live Input & Delete Events
+    // Attach Live Input, Duplicate & Delete Events
     function attachEventListeners() {
-        document.querySelectorAll("#table-body input, #table-body textarea, #table-body select").forEach(element => {
+        document.querySelectorAll("#table-body input[data-field], #table-body textarea, #table-body select").forEach(element => {
             const updateHandler = (e) => {
                 const index = e.target.dataset.index;
                 const field = e.target.dataset.field;
@@ -116,7 +117,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         tasks[index].statusUpdatedAt = now;
                         e.target.className = `status-badge status-${e.target.value.toLowerCase().replace(/\s+/g, "")}`;
                         
-                        // Instantly update status timestamp label below select dropdown
                         const statusTimeElem = e.target.parentElement.querySelector('.status-time');
                         if (statusTimeElem) {
                             statusTimeElem.innerHTML = `<i class="fa-solid fa-rotate-left"></i> ${escapeHtml(e.target.value)} at: <span>${formatDateTime(now)}</span>`;
@@ -131,10 +131,34 @@ document.addEventListener("DOMContentLoaded", () => {
             element.addEventListener("change", updateHandler);
         });
 
+        // Duplicate Row Action
+        document.querySelectorAll(".copy-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const index = parseInt(e.currentTarget.dataset.index, 10);
+                const sourceTask = tasks[index];
+                const now = Date.now();
+
+                // Create a duplicate object retaining notes, pageType, and status
+                const duplicatedTask = {
+                    id: "",
+                    pageType: sourceTask.pageType,
+                    requirement: sourceTask.requirement,
+                    status: sourceTask.status,
+                    createdAt: now,
+                    statusUpdatedAt: now
+                };
+
+                // Insert right below the current row
+                tasks.splice(index + 1, 0, duplicatedTask);
+                saveToLocalStorage();
+                renderTable();
+            });
+        });
+
         // Delete Row Action
         document.querySelectorAll(".delete-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
-                const index = e.currentTarget.dataset.index;
+                const index = parseInt(e.currentTarget.dataset.index, 10);
                 tasks.splice(index, 1);
                 saveToLocalStorage();
                 renderTable();
@@ -146,7 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function addNewRow() {
         const now = Date.now();
         const newTask = {
-            id: getNextId(),
+            id: "",
             pageType: "",
             requirement: "",
             status: "Pending",
@@ -257,11 +281,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Helper: Escape HTML
-    function escapeHtml(text) {
-        return text ? text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;") : "";
-    }
+   // Helper: Escape HTML
+// Helper: Escape HTML
+function escapeHtml(text) {
+    return text ? text.replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">").replace(/"/g, '"') : "";
+}
 
     // Initial render
     renderTable();
-    checkAndWarnOldData(false);
+    // checkAndWarnOldData(false);
 });
