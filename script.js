@@ -6,7 +6,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-     // Listen to Date Filter change event
+
+
+    const exportPdfBtn = document.getElementById("export-pdf-btn");
+    if (exportPdfBtn) {
+        exportPdfBtn.addEventListener("click", exportToPDF);
+    }
+
+    // Listen to Date Filter change event
     const dateFilterElement = document.getElementById("date-filter");
     if (dateFilterElement) {
         dateFilterElement.addEventListener("change", () => {
@@ -24,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-   
+
 
     // Date Formatter Helper (e.g. 05 Oct, 10:26 AM)
     function formatDateTime(timestamp) {
@@ -280,40 +287,139 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // PDF Export Functionality
+    // Dynamic Light-Mode PDF Export Generator (Does NOT clear data & wraps text fully)
     function exportToPDF() {
-        const element = document.getElementById("pdf-content");
-        element.classList.add("pdf-export-mode");
-
-        const options = {
-            margin: [8, 8, 8, 8],
-            filename: `Project_Requirements_${new Date().toISOString().slice(0, 10)}.pdf`,
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, backgroundColor: '#ffffff' },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
-        };
-
-        return html2pdf().set(options).from(element).save().then(() => {
-            element.classList.remove("pdf-export-mode");
-        }).catch((err) => {
-            element.classList.remove("pdf-export-mode");
-            console.error("PDF Export Error: ", err);
-        });
-    }
-
-    // Export PDF & Clear Button
-    exportClearBtn.addEventListener("click", () => {
         if (tasks.length === 0) {
-            alert("No tasks to export!");
+            alert("No tasks available to export!");
             return;
         }
-        if (confirm("This will export all current tasks as a PDF and then clear all data. Proceed?")) {
-            exportToPDF().then(() => {
-                tasks = [];
-                saveToLocalStorage();
-                renderTable();
-            });
-        }
-    });
+
+        const todayDate = new Date().toLocaleDateString('en-GB', {
+            day: '2-digit', month: 'short', year: 'numeric'
+        });
+        const todayTime = new Date().toLocaleTimeString('en-US', {
+            hour: '2-digit', minute: '2-digit', hour12: true
+        });
+
+        const completedCount = tasks.filter(t => t.status === 'Completed').length;
+        const inProgressCount = tasks.filter(t => t.status === 'In Progress').length;
+        const pendingCount = tasks.filter(t => (t.status || 'Pending') === 'Pending' || t.status === 'Testing').length;
+
+        // Filter status for report header
+        const selectedFilter = document.getElementById("date-filter")?.value || "all";
+        const filterText = selectedFilter === "all" ? "Last 7 Days" : selectedFilter;
+
+        // Build Rows HTML cleanly without inputs/textareas
+        let tableRowsHtml = "";
+        tasks.forEach(task => {
+            const createdFormatted = formatDateTime(task.createdAt);
+            const statusTimeFormatted = formatDateTime(task.statusUpdatedAt || task.createdAt);
+            const statusClass = (task.status || 'Pending').toLowerCase().replace(/\s+/g, "");
+
+            tableRowsHtml += `
+            <tr>
+                <td style="padding: 10px 8px; border-bottom: 1px solid #e5e7eb; vertical-align: top;">
+                    <span style="display: inline-block; font-weight: 600; font-size: 11px; padding: 2px 7px; border-radius: 4px; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db;">${escapeHtml(task.id)}</span>
+                </td>
+                <td style="padding: 10px 8px; border-bottom: 1px solid #e5e7eb; vertical-align: top; color: #111827; font-weight: 500;">
+                    ${escapeHtml(task.pageType || 'N/A')}
+                    <div style="font-size: 10px; color: #6b7280; font-weight: normal; margin-top: 4px;">Created: ${createdFormatted}</div>
+                </td>
+                <td style="padding: 10px 8px; border-bottom: 1px solid #e5e7eb; vertical-align: top; color: #1f2937; line-height: 1.5; word-break: break-word;">
+                    ${escapeHtml(task.requirement || 'No notes provided')}
+                </td>
+                <td style="padding: 10px 8px; border-bottom: 1px solid #e5e7eb; vertical-align: top;">
+                    <span class="pdf-status pdf-status-${statusClass}">${escapeHtml(task.status || 'Pending')}</span>
+                    <div style="font-size: 10px; color: #6b7280; margin-top: 4px;">${statusTimeFormatted}</div>
+                </td>
+            </tr>
+        `;
+        });
+
+        // Complete Light-Mode Printable Document Template
+        const pdfContainer = document.createElement("div");
+        pdfContainer.style.padding = "20px";
+        pdfContainer.style.background = "#ffffff";
+        pdfContainer.style.color = "#111827";
+        pdfContainer.style.fontFamily = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+        pdfContainer.style.fontSize = "12px";
+
+        pdfContainer.innerHTML = `
+        <style>
+            .pdf-status { display: inline-block; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 12px; }
+            .pdf-status-completed { background: #dcfce7; color: #15803d; }
+            .pdf-status-inprogress { background: #dbeafe; color: #1d4ed8; }
+            .pdf-status-testing { background: #fef3c7; color: #b45309; }
+            .pdf-status-pending { background: #f3f4f6; color: #4b5563; }
+        </style>
+        
+        <!-- Document Header -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; border-bottom: 2px solid #2563eb; padding-bottom: 12px;">
+            <div>
+                <h1 style="font-size: 20px; font-weight: 700; color: #1e3a8a; margin: 0;">ReqShift</h1>
+                <p style="font-size: 12px; color: #4b5563; margin: 2px 0 0 0;">Project Requirements & Dev Tasks Report</p>
+            </div>
+            <div style="text-align: right; font-size: 10px; color: #6b7280; line-height: 1.4;">
+                <strong>Exported:</strong> ${todayDate}, ${todayTime}<br>
+                <strong>Filter Range:</strong> ${filterText}
+            </div>
+        </div>
+
+        <!-- Summary Statistics Grid -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px;">
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 12px;">
+                <div style="font-size: 10px; color: #64748b; font-weight: 600; text-transform: uppercase;">Total</div>
+                <div style="font-size: 16px; font-weight: 700; color: #0f172a;">${tasks.length}</div>
+            </div>
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 8px 12px;">
+                <div style="font-size: 10px; color: #166534; font-weight: 600; text-transform: uppercase;">Completed</div>
+                <div style="font-size: 16px; font-weight: 700; color: #15803d;">${completedCount}</div>
+            </div>
+            <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 8px 12px;">
+                <div style="font-size: 10px; color: #1e40af; font-weight: 600; text-transform: uppercase;">In Progress</div>
+                <div style="font-size: 16px; font-weight: 700; color: #1d4ed8;">${inProgressCount}</div>
+            </div>
+            <div style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 6px; padding: 8px 12px;">
+                <div style="font-size: 10px; color: #92400e; font-weight: 600; text-transform: uppercase;">Pending</div>
+                <div style="font-size: 16px; font-weight: 700; color: #b45309;">${pendingCount}</div>
+            </div>
+        </div>
+
+        <!-- Requirement Table -->
+        <table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: left;">
+            <thead>
+                <tr style="background: #1e3a8a; color: #ffffff;">
+                    <th style="padding: 10px 8px; border-bottom: 2px solid #1e40af; width: 45px; color: #ffffff;">ID</th>
+                    <th style="padding: 10px 8px; border-bottom: 2px solid #1e40af; width: 140px; color: #ffffff;">PAGE / TASK</th>
+                    <th style="padding: 10px 8px; border-bottom: 2px solid #1e40af; color: #ffffff;">REQUIREMENT NOTES</th>
+                    <th style="padding: 10px 8px; border-bottom: 2px solid #1e40af; width: 120px; color: #ffffff;">STATUS</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${tableRowsHtml}
+            </tbody>
+        </table>
+
+        <!-- Footer -->
+        <div style="margin-top: 16px; font-size: 10px; color: #94a3b8; display: flex; justify-content: space-between; border-top: 1px solid #e2e8f0; padding-top: 8px;">
+            <span>ReqShift Requirement Tracker</span>
+            <span>Confidential - For Internal Use Only</span>
+        </div>
+    `;
+
+        // html2pdf options
+        const opt = {
+            margin: [10, 10, 10, 10],
+            filename: `ReqShift_Report_${todayDate.replace(/ /g, "_")}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true, logging: false },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        // Download PDF securely without clearing data
+        html2pdf().set(opt).from(pdfContainer).save();
+    }
+
 
     // Check Data Older Than 7 Days
     function checkAndWarnOldData(showModalPrompt = true) {
