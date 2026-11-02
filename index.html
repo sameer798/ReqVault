@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,15 +8,18 @@
     <!-- Google Fonts & Font Awesome Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@500;700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="style.css">
 
     <!-- html2pdf.js for High Contrast PDF Export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
+
 <body>
 
     <div class="app-container">
@@ -38,6 +42,9 @@
                 <button id="check-old-btn" class="btn btn-danger">
                     <i class="fa-solid fa-broom"></i> Clear Old Data (1 Wk+)
                 </button>
+                <select id="date-filter" class="date-filter-select" title="Filter by Date">
+                    <option value="all">All (Last 7 Days)</option>
+                </select>
             </div>
         </header>
 
@@ -47,7 +54,7 @@
                 <thead>
                     <tr>
                         <th style="width: 90px;">ID</th>
-                        <th style="width: 270px;">PAGE / TYPE</th>
+                        <th style="width: 270px;">PAGE / TYPE / TASK</th>
                         <th>REQUIREMENT NOTES / CODE SNIPPET</th>
                         <th style="width: 200px;">STATUS</th>
                         <th style="width: 70px;" class="no-print">ACTIONS</th>
@@ -68,7 +75,8 @@
                 <h3>Old Data Cleanup Warning</h3>
             </div>
             <p class="modal-body">
-                Requirements older than 7 days were detected in local storage. Would you like to export them to PDF before clearing?
+                Requirements older than 7 days were detected in local storage. Would you like to export them to PDF
+                before clearing?
             </p>
             <div class="modal-actions">
                 <button id="modal-export-clear-btn" class="btn btn-primary">
@@ -85,4 +93,5 @@
     <!-- Application Script -->
     <script src="script.js"></script>
 </body>
+
 </html>

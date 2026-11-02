@@ -4,6 +4,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const exportClearBtn = document.getElementById("export-clear-btn");
     const checkOldBtn = document.getElementById("check-old-btn");
 
+
+
+     // Listen to Date Filter change event
+    const dateFilterElement = document.getElementById("date-filter");
+    if (dateFilterElement) {
+        dateFilterElement.addEventListener("change", () => {
+            renderTable();
+        });
+    }
     // Modal elements
     const modalOverlay = document.getElementById("modal-overlay");
     const modalExportClearBtn = document.getElementById("modal-export-clear-btn");
@@ -12,6 +21,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Load Tasks from LocalStorage
     let tasks = JSON.parse(localStorage.getItem("devTasks")) || [];
+
+
+
+   
 
     // Date Formatter Helper (e.g. 05 Oct, 10:26 AM)
     function formatDateTime(timestamp) {
@@ -33,28 +46,92 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+
+
+
+    // Helper: Format only date for filtering (e.g., "02 Oct")
+    function formatOnlyDate(timestamp) {
+        if (!timestamp) return "";
+        const d = new Date(timestamp);
+        const day = d.getDate().toString().padStart(2, '0');
+        const month = d.toLocaleString('en-US', { month: 'short' });
+        return `${day} ${month}`;
+    }
+
+    // Update Date Filter Dropdown dynamically based on existing tasks
+    function updateDateFilterDropdown() {
+        const dateFilterSelect = document.getElementById("date-filter");
+        if (!dateFilterSelect) return;
+
+        const currentValue = dateFilterSelect.value;
+        const uniqueDatesMap = new Map();
+
+        tasks.forEach(task => {
+            if (task.createdAt) {
+                const dateStr = formatOnlyDate(task.createdAt);
+                uniqueDatesMap.set(dateStr, task.createdAt);
+            }
+        });
+
+        let optionsHtml = `<option value="all">All (Last 7 Days)</option>`;
+
+        // Sort dates descending (newest first)
+        const sortedDates = Array.from(uniqueDatesMap.entries()).sort((a, b) => b[1] - a[1]);
+
+        sortedDates.forEach(([dateStr]) => {
+            optionsHtml += `<option value="${dateStr}">${dateStr}</option>`;
+        });
+
+        dateFilterSelect.innerHTML = optionsHtml;
+
+        // Retain selection if valid
+        if (Array.from(dateFilterSelect.options).some(opt => opt.value === currentValue)) {
+            dateFilterSelect.value = currentValue;
+        } else {
+            dateFilterSelect.value = "all";
+        }
+    }
+
+
+
     // Render Table Rows or Empty State
+    // Render Table Rows or Empty State with Filter Support
     function renderTable() {
         tableBody.innerHTML = "";
 
         // Ensure IDs are strictly sequential on render
         updateSequentialIds();
 
+        // Update dynamic date filter dropdown options based on current tasks
+        updateDateFilterDropdown();
+
+        // Get currently selected filter value
+        const selectedDateFilter = document.getElementById("date-filter")?.value || "all";
+
+        // Map tasks with original indices so duplicate/delete target the right task correctly
+        let displayedTasks = tasks.map((task, originalIndex) => ({ ...task, originalIndex }));
+
+        // Filter tasks if a specific date is selected
+        if (selectedDateFilter !== "all") {
+            displayedTasks = displayedTasks.filter(task => formatOnlyDate(task.createdAt) === selectedDateFilter);
+        }
+
         // Empty state check
-        if (tasks.length === 0) {
+        if (displayedTasks.length === 0) {
             tableBody.innerHTML = `
                 <tr>
                     <td colspan="5" class="empty-state">
                         <i class="fa-regular fa-folder-open empty-icon"></i>
-                        <p class="empty-text">No requirements found</p>
-                        <span class="empty-subtext">Click <strong>"+ Add New Row"</strong> or press <strong>Spacebar</strong> to add your first requirement.</span>
+                        <p class="empty-text">No requirements found for this date</p>
+                        <span class="empty-subtext">Try selecting another date or click <strong>"+ Add New Row"</strong>.</span>
                     </td>
                 </tr>
             `;
             return;
         }
 
-        tasks.forEach((task, index) => {
+        displayedTasks.forEach((task) => {
+            const index = task.originalIndex; // Real index in main tasks array
             const tr = document.createElement("tr");
 
             const createdFormatted = formatDateTime(task.createdAt);
@@ -102,6 +179,9 @@ document.addEventListener("DOMContentLoaded", () => {
         attachEventListeners();
     }
 
+
+
+
     // Attach Live Input, Duplicate & Delete Events
     function attachEventListeners() {
         document.querySelectorAll("#table-body input[data-field], #table-body textarea, #table-body select").forEach(element => {
@@ -116,7 +196,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         const now = Date.now();
                         tasks[index].statusUpdatedAt = now;
                         e.target.className = `status-badge status-${e.target.value.toLowerCase().replace(/\s+/g, "")}`;
-                        
+
                         const statusTimeElem = e.target.parentElement.querySelector('.status-time');
                         if (statusTimeElem) {
                             statusTimeElem.innerHTML = `<i class="fa-solid fa-rotate-left"></i> ${escapeHtml(e.target.value)} at: <span>${formatDateTime(now)}</span>`;
@@ -188,8 +268,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("keydown", (e) => {
         const activeElement = document.activeElement;
         const isEditingInput = activeElement && (
-            activeElement.tagName === "INPUT" || 
-            activeElement.tagName === "TEXTAREA" || 
+            activeElement.tagName === "INPUT" ||
+            activeElement.tagName === "TEXTAREA" ||
             activeElement.tagName === "SELECT"
         );
 
@@ -206,7 +286,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const options = {
             margin: [8, 8, 8, 8],
-            filename: `Project_Requirements_${new Date().toISOString().slice(0,10)}.pdf`,
+            filename: `Project_Requirements_${new Date().toISOString().slice(0, 10)}.pdf`,
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2, backgroundColor: '#ffffff' },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
@@ -281,11 +361,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Helper: Escape HTML
-   // Helper: Escape HTML
-// Helper: Escape HTML
-function escapeHtml(text) {
-    return text ? text.replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">").replace(/"/g, '"') : "";
-}
+    // Helper: Escape HTML
+    // Helper: Escape HTML
+    function escapeHtml(text) {
+        return text ? text.replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">").replace(/"/g, '"') : "";
+    }
 
     // Initial render
     renderTable();

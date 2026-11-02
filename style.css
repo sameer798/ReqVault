@@ -535,3 +535,42 @@ select.status-badge option {
     background: rgba(239, 68, 68, 0.15);
     color: #EF4444;
 }
+
+
+
+
+
+
+/* Compact Date Filter Dropdown Styling */
+.date-filter-select {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.6rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    height: 38px; /* Buttons ki height ke barabar */
+}
+
+.date-filter-select:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent-cyan);
+}
+
+.date-filter-select option {
+    background: var(--bg-main);
+    color: var(--text-primary);
+}
+
+/* Mobile View optimization */
+@media screen and (max-width: 768px) {
+    .date-filter-select {
+        width: 100% !important;
+        text-align: center;
+        text-align-last: center;
+    }
+}
