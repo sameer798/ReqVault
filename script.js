@@ -1,39 +1,29 @@
-document.addEventListener("DOMContentLoaded", () => {
+window.initReqShiftApp = function() {
     const tableBody = document.getElementById("table-body");
     const addRowBtn = document.getElementById("add-row-btn");
-    const exportClearBtn = document.getElementById("export-clear-btn");
     const checkOldBtn = document.getElementById("check-old-btn");
-
-
-
-
-
     const exportPdfBtn = document.getElementById("export-pdf-btn");
+    const dateFilterElement = document.getElementById("date-filter");
+
+    if (!tableBody) return;
+
     if (exportPdfBtn) {
-        exportPdfBtn.addEventListener("click", exportToPDF);
+        exportPdfBtn.onclick = exportToPDF;
     }
 
-    // Listen to Date Filter change event
-    const dateFilterElement = document.getElementById("date-filter");
     if (dateFilterElement) {
-        dateFilterElement.addEventListener("change", () => {
+        dateFilterElement.onchange = () => {
             renderTable();
-        });
+        };
     }
-    // Modal elements
+
     const modalOverlay = document.getElementById("modal-overlay");
     const modalExportClearBtn = document.getElementById("modal-export-clear-btn");
     const modalJustClearBtn = document.getElementById("modal-just-clear-btn");
     const modalCancelBtn = document.getElementById("modal-cancel-btn");
 
-    // Load Tasks from LocalStorage
     let tasks = JSON.parse(localStorage.getItem("devTasks")) || [];
 
-
-
-
-
-    // Date Formatter Helper (e.g. 05 Oct, 10:26 AM)
     function formatDateTime(timestamp) {
         if (!timestamp) return "";
         const d = new Date(timestamp);
@@ -46,17 +36,12 @@ document.addEventListener("DOMContentLoaded", () => {
         return `${day} ${month}, ${hours.toString().padStart(2, '0')}:${minutes} ${ampm}`;
     }
 
-    // Helper: Re-assign sequential IDs (R1, R2, R3...) across all tasks
     function updateSequentialIds() {
         tasks.forEach((task, index) => {
             task.id = `R${index + 1}`;
         });
     }
 
-
-
-
-    // Helper: Format only date for filtering (e.g., "02 Oct")
     function formatOnlyDate(timestamp) {
         if (!timestamp) return "";
         const d = new Date(timestamp);
@@ -65,7 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return `${day} ${month}`;
     }
 
-    // Update Date Filter Dropdown dynamically based on existing tasks
     function updateDateFilterDropdown() {
         const dateFilterSelect = document.getElementById("date-filter");
         if (!dateFilterSelect) return;
@@ -81,8 +65,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         let optionsHtml = `<option value="all">All (Last 7 Days)</option>`;
-
-        // Sort dates descending (newest first)
         const sortedDates = Array.from(uniqueDatesMap.entries()).sort((a, b) => b[1] - a[1]);
 
         sortedDates.forEach(([dateStr]) => {
@@ -91,7 +73,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         dateFilterSelect.innerHTML = optionsHtml;
 
-        // Retain selection if valid
         if (Array.from(dateFilterSelect.options).some(opt => opt.value === currentValue)) {
             dateFilterSelect.value = currentValue;
         } else {
@@ -99,31 +80,20 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-
-
-    // Render Table Rows or Empty State
-    // Render Table Rows or Empty State with Filter Support
     function renderTable() {
+        if (!tableBody) return;
         tableBody.innerHTML = "";
 
-        // Ensure IDs are strictly sequential on render
         updateSequentialIds();
-
-        // Update dynamic date filter dropdown options based on current tasks
         updateDateFilterDropdown();
 
-        // Get currently selected filter value
         const selectedDateFilter = document.getElementById("date-filter")?.value || "all";
-
-        // Map tasks with original indices so duplicate/delete target the right task correctly
         let displayedTasks = tasks.map((task, originalIndex) => ({ ...task, originalIndex }));
 
-        // Filter tasks if a specific date is selected
         if (selectedDateFilter !== "all") {
             displayedTasks = displayedTasks.filter(task => formatOnlyDate(task.createdAt) === selectedDateFilter);
         }
 
-        // Empty state check
         if (displayedTasks.length === 0) {
             tableBody.innerHTML = `
                 <tr>
@@ -138,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         displayedTasks.forEach((task) => {
-            const index = task.originalIndex; // Real index in main tasks array
+            const index = task.originalIndex;
             const tr = document.createElement("tr");
 
             const createdFormatted = formatDateTime(task.createdAt);
@@ -186,10 +156,6 @@ document.addEventListener("DOMContentLoaded", () => {
         attachEventListeners();
     }
 
-
-
-
-    // Attach Live Input, Duplicate & Delete Events
     function attachEventListeners() {
         document.querySelectorAll("#table-body input[data-field], #table-body textarea, #table-body select").forEach(element => {
             const updateHandler = (e) => {
@@ -198,7 +164,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (tasks[index]) {
                     tasks[index][field] = e.target.value;
 
-                    // Update dynamic status timestamp when status changes
                     if (field === "status") {
                         const now = Date.now();
                         tasks[index].statusUpdatedAt = now;
@@ -214,18 +179,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             };
 
-            element.addEventListener("input", updateHandler);
-            element.addEventListener("change", updateHandler);
+            element.oninput = updateHandler;
+            element.onchange = updateHandler;
         });
 
-        // Duplicate Row Action
         document.querySelectorAll(".copy-btn").forEach(btn => {
-            btn.addEventListener("click", (e) => {
+            btn.onclick = (e) => {
                 const index = parseInt(e.currentTarget.dataset.index, 10);
                 const sourceTask = tasks[index];
                 const now = Date.now();
 
-                // Create a duplicate object retaining notes, pageType, and status
                 const duplicatedTask = {
                     id: "",
                     pageType: sourceTask.pageType,
@@ -235,25 +198,22 @@ document.addEventListener("DOMContentLoaded", () => {
                     statusUpdatedAt: now
                 };
 
-                // Insert right below the current row
                 tasks.splice(index + 1, 0, duplicatedTask);
                 saveToLocalStorage();
                 renderTable();
-            });
+            };
         });
 
-        // Delete Row Action
         document.querySelectorAll(".delete-btn").forEach(btn => {
-            btn.addEventListener("click", (e) => {
+            btn.onclick = (e) => {
                 const index = parseInt(e.currentTarget.dataset.index, 10);
                 tasks.splice(index, 1);
                 saveToLocalStorage();
                 renderTable();
-            });
+            };
         });
     }
 
-    // Add New Row Action
     function addNewRow() {
         const now = Date.now();
         const newTask = {
@@ -269,10 +229,11 @@ document.addEventListener("DOMContentLoaded", () => {
         renderTable();
     }
 
-    addRowBtn.addEventListener("click", addNewRow);
+    if (addRowBtn) {
+        addRowBtn.onclick = addNewRow;
+    }
 
-    // Keyboard Shortcut: Spacebar key to Add New Row
-    document.addEventListener("keydown", (e) => {
+    document.onkeydown = (e) => {
         const activeElement = document.activeElement;
         const isEditingInput = activeElement && (
             activeElement.tagName === "INPUT" ||
@@ -284,15 +245,20 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             addNewRow();
         }
-    });
+    };
 
-    // PDF Export Functionality
-    // Dynamic Light-Mode PDF Export Generator (Does NOT clear data & wraps text fully)
     function exportToPDF() {
         if (tasks.length === 0) {
             alert("No tasks available to export!");
             return;
         }
+
+        // Current logged-in user details fetch karna PDF ke liye
+        const currentUser = JSON.parse(localStorage.getItem("reqshift_current_user")) || {
+            name: "User", role: "Developer"
+        };
+        const exportUserName = currentUser.name || "User";
+        const exportUserRole = currentUser.role || "Developer";
 
         const todayDate = new Date().toLocaleDateString('en-GB', {
             day: '2-digit', month: 'short', year: 'numeric'
@@ -305,11 +271,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const inProgressCount = tasks.filter(t => t.status === 'In Progress').length;
         const pendingCount = tasks.filter(t => (t.status || 'Pending') === 'Pending' || t.status === 'Testing').length;
 
-        // Filter status for report header
         const selectedFilter = document.getElementById("date-filter")?.value || "all";
         const filterText = selectedFilter === "all" ? "Last 7 Days" : selectedFilter;
 
-        // Build Rows HTML cleanly without inputs/textareas
         let tableRowsHtml = "";
         tasks.forEach(task => {
             const createdFormatted = formatDateTime(task.createdAt);
@@ -336,7 +300,6 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
         });
 
-        // Complete Light-Mode Printable Document Template
         const pdfContainer = document.createElement("div");
         pdfContainer.style.padding = "20px";
         pdfContainer.style.background = "#ffffff";
@@ -353,11 +316,12 @@ document.addEventListener("DOMContentLoaded", () => {
             .pdf-status-pending { background: #f3f4f6; color: #4b5563; }
         </style>
         
-        <!-- Document Header -->
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; border-bottom: 2px solid #2563eb; padding-bottom: 12px;">
             <div>
                 <h1 style="font-size: 20px; font-weight: 700; color: #1e3a8a; margin: 0;">ReqShift</h1>
                 <p style="font-size: 12px; color: #4b5563; margin: 2px 0 0 0;">Project Requirements & Dev Tasks Report</p>
+                <!-- PDF Header mein User Name aur Role add kiya gaya hai -->
+                <p style="font-size: 11px; color: #1e293b; font-weight: 600; margin: 6px 0 0 0;">Developer: ${escapeHtml(exportUserName)} (${escapeHtml(exportUserRole)})</p>
             </div>
             <div style="text-align: right; font-size: 10px; color: #6b7280; line-height: 1.4;">
                 <strong>Exported:</strong> ${todayDate}, ${todayTime}<br>
@@ -365,7 +329,6 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         </div>
 
-        <!-- Summary Statistics Grid -->
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px;">
             <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 12px;">
                 <div style="font-size: 10px; color: #64748b; font-weight: 600; text-transform: uppercase;">Total</div>
@@ -385,7 +348,6 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         </div>
 
-        <!-- Requirement Table -->
         <table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: left;">
             <thead>
                 <tr style="background: #1e3a8a; color: #ffffff;">
@@ -400,14 +362,12 @@ document.addEventListener("DOMContentLoaded", () => {
             </tbody>
         </table>
 
-        <!-- Footer -->
         <div style="margin-top: 16px; font-size: 10px; color: #94a3b8; display: flex; justify-content: space-between; border-top: 1px solid #e2e8f0; padding-top: 8px;">
             <span>ReqShift Requirement Tracker</span>
             <span>Confidential - For Internal Use Only</span>
         </div>
     `;
 
-        // html2pdf options
         const opt = {
             margin: [10, 10, 10, 10],
             filename: `ReqShift_Report_${todayDate.replace(/ /g, "_")}.pdf`,
@@ -416,42 +376,45 @@ document.addEventListener("DOMContentLoaded", () => {
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
 
-        // Download PDF securely without clearing data
         html2pdf().set(opt).from(pdfContainer).save();
     }
 
-
-    // Check Data Older Than 7 Days
     function checkAndWarnOldData(showModalPrompt = true) {
         const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
         const now = Date.now();
         const hasOldData = tasks.some(task => (now - task.createdAt) > SEVEN_DAYS_MS);
 
         if (hasOldData) {
-            modalOverlay.classList.remove("hidden");
+            if (modalOverlay) modalOverlay.classList.remove("hidden");
         } else if (showModalPrompt) {
             alert("No tasks older than 7 days were found!");
         }
     }
 
-    checkOldBtn.addEventListener("click", () => checkAndWarnOldData(true));
+    if (checkOldBtn) {
+        checkOldBtn.onclick = () => checkAndWarnOldData(true);
+    }
 
-    // Modal Actions
-    modalExportClearBtn.addEventListener("click", () => {
-        exportToPDF().then(() => {
+    if (modalExportClearBtn) {
+        modalExportClearBtn.onclick = () => {
+            exportToPDF();
             clearOldData();
-            modalOverlay.classList.add("hidden");
-        });
-    });
+            if (modalOverlay) modalOverlay.classList.add("hidden");
+        };
+    }
 
-    modalJustClearBtn.addEventListener("click", () => {
-        clearOldData();
-        modalOverlay.classList.add("hidden");
-    });
+    if (modalJustClearBtn) {
+        modalJustClearBtn.onclick = () => {
+            clearOldData();
+            if (modalOverlay) modalOverlay.classList.add("hidden");
+        };
+    }
 
-    modalCancelBtn.addEventListener("click", () => {
-        modalOverlay.classList.add("hidden");
-    });
+    if (modalCancelBtn) {
+        modalCancelBtn.onclick = () => {
+            if (modalOverlay) modalOverlay.classList.add("hidden");
+        };
+    }
 
     function clearOldData() {
         const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
@@ -461,19 +424,21 @@ document.addEventListener("DOMContentLoaded", () => {
         renderTable();
     }
 
-    // Helper: Save to LocalStorage
     function saveToLocalStorage() {
         localStorage.setItem("devTasks", JSON.stringify(tasks));
     }
 
-    // Helper: Escape HTML
-    // Helper: Escape HTML
-    // Helper: Escape HTML
     function escapeHtml(text) {
-        return text ? text.replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">").replace(/"/g, '"') : "";
+        return text ? String(text).replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">").replace(/"/g, "").replace(/'/g, "'") : "";
     }
 
-    // Initial render
     renderTable();
-    // checkAndWarnOldData(false);
+};
+
+// Automatic initialization on page refresh if user is already logged in
+document.addEventListener("DOMContentLoaded", () => {
+    const currentUserCheck = localStorage.getItem("reqshift_current_user");
+    if (currentUserCheck && typeof window.initReqShiftApp === "function") {
+        window.initReqShiftApp();
+    }
 });
